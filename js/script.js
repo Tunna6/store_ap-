@@ -5,13 +5,14 @@
 // async await 
 
 const row = document.querySelector('.row')
+let sepet =[]
 
 
 
 
 async function fetchData() {
     try {
-        let response = await fetch('https://api.escuelajs.co/api/v1/products')
+        let response = await fetch('https://fakestoreapi.com/products')
         let data = await response.json()
         return data
     } catch (error) {
@@ -28,7 +29,7 @@ fetchData()
             
         // }
 
-        let sepet =[]
+        
 
         data.forEach(ürün => {
             // console.log(ürün.image);
@@ -49,7 +50,7 @@ fetchData()
             imgDiv.style.height ='250px'
 
             const img = document.createElement('img')
-            img.src = ürün.category.image
+            img.src = ürün.image
 
             img.style.width = '100%'
             img.style.height = '100%'
@@ -62,7 +63,7 @@ fetchData()
             baslik.textContent = ürün.title
 
             const aciklama = document.createElement('p')
-            aciklama.textContent = `${ürün.description} - ${ürün.price}$`
+            aciklama.textContent = `${ürün.price}$`
 
             const btn = document.createElement('button')
             btn.classList.add('btn','btn-warning')
@@ -72,6 +73,18 @@ fetchData()
             btn.addEventListener('click',() => {
                 console.log(ürün);
                 sepet.push(ürün)
+
+                sepet.forEach (ürün => {
+                    const ürünAdi = document.createElement('p')
+                    ürünAdi.textContent = ürün.title
+                
+                    cart.append(ürünAdi)
+                })
+
+                let sepetJSON = JSON.stringify(sepet)
+                console.log(sepetJSON);
+
+                localStorage.setItem('sepet',sepetJSON)
 
                 console.log(sepet);
             })
@@ -93,3 +106,25 @@ fetchData()
             row.append(col)
         });
     })
+
+
+    //! sepete ekleme 
+
+const cartIcon = document.querySelector('.fa-cart-shopping')
+
+const cart = document.querySelector('#sepet')
+
+cartIcon.addEventListener('click', () => {
+    cart.classList.toggle('aktif')
+
+})
+
+let localSepet = localStorage.getItem('sepet')
+let normalsepet = JSON.parse(localSepet)
+
+normalsepet.forEach(ürün => {
+    const baslik = document.createElement ('p')
+    baslik.textContent = ürün.title
+
+    cart.append(baslik)
+})
